@@ -38,7 +38,7 @@ Secure multiplayer web app where NCAA teams are tradable assets. Players start w
 This repository includes an `amplify.yml` optimized for Next.js SSR builds on Node 20.
 
 1. Connect the Git repository in Amplify and select the branch.
-2. Keep the default buildspec or use repo `amplify.yml`.
+2. Ensure Amplify is building a commit that includes this repository `amplify.yml`.
 3. Add environment variables in Amplify app settings:
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
@@ -46,8 +46,12 @@ This repository includes an `amplify.yml` optimized for Next.js SSR builds on No
 5. Trigger a build and deploy.
 
 Notes:
-- Amplify executes `npm ci` and `npm run build` from `amplify.yml`.
+- Build install step is lockfile-aware: `npm ci` when `package-lock.json` exists; otherwise `npm install`.
 - Node engine is pinned in `package.json` (`>=20 <23`) to avoid runtime drift.
+- `Failed to set up process.env.secrets` in Amplify logs usually means no SSM secrets are configured for that app/env; configure Amplify environment variables directly if needed.
+
+### Amplify failure in your log
+Your log shows Amplify executed `npm ci` and then failed because no `package-lock.json` existed. This repo now avoids that failure by falling back to `npm install` when a lockfile is missing.
 
 ## Required Deliverables Included
 - Full Next.js project structure (`app/*`, `lib/*`)
